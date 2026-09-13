@@ -41,6 +41,9 @@ export const SHIFT_CLOCK: readonly (readonly [number, number])[] = [
   [1, 21 * 60 + 36],
 ];
 
+/** FOCUS frame numbers are measured on the 24 fps render (240 frames), whatever frame rate is delivered. */
+export const STORY_FRAMES = 240;
+
 export interface FocusBox {
   frame: number;
   x0: number;

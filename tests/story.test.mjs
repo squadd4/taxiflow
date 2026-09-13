@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 const { clamp, interpolate, range } = await import("../lib/hero/math.ts");
-const { FOCUS, SHIFT_CLOCK, STORY } = await import("../lib/hero/story.ts");
+const { FOCUS, SHIFT_CLOCK, STORY, STORY_FRAMES } = await import("../lib/hero/story.ts");
 
 test("range is normalised and clamped", () => {
   assert.equal(range(-1, 0, 1), 0);
@@ -49,7 +49,7 @@ test("the shift clock runs forward from morning into the night", () => {
 
 test("focus boxes cover the whole video and stay inside the frame", () => {
   assert.equal(FOCUS[0].frame, 0);
-  assert.equal(FOCUS.at(-1).frame, 239);
+  assert.equal(FOCUS.at(-1).frame, STORY_FRAMES - 1);
   for (const box of FOCUS) {
     assert.ok(box.x0 >= 0 && box.x1 <= 1 && box.x0 < box.x1);
     assert.ok(box.y0 >= 0 && box.y1 <= 1 && box.y0 < box.y1);

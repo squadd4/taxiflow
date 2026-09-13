@@ -84,9 +84,10 @@ scroll ─▶ ScrollTrigger ─▶ target ─▶ follow() ─▶ progress ─▶
   (`640vh` + `130vh` desktop, `460vh` + `110vh` mobile).
 - **Video scrubbing.** `lib/scroll-video/VideoScrubber.ts` downloads the MP4 once into a
   Blob (no range requests while seeking), keeps the element paused, coalesces seeks so
-  fast scrolling never queues, starts exactly at `t = 0` and lands on frame 239 at 100%.
+  fast scrolling never queues, starts exactly at `t = 0` and lands on the last frame at 100%. Frame rate and
+  frame counts come from `lib/video.manifest.json`, written by the video script.
 - **Fallback.** If seeks stay slower than 120 ms (median of 10) or the video errors, the
-  page switches to `FrameSequence`: 240 WebP frames on a canvas, loaded coarse-to-fine,
+  page switches to `FrameSequence`: WebP frames (24 per second) on a canvas, loaded coarse-to-fine,
   always showing the nearest loaded frame so it never blanks.
 - **Portrait framing.** `lib/hero/camera.ts` keeps the car's important region in view:
   landscape screens get a cover crop that follows the car; portrait screens get a
@@ -134,22 +135,29 @@ more would give a truly sharp zoom.
 
 ## Video assets
 
-`scripts/prepare_video.py` rebuilds everything in `public/video` and
-`app/opengraph-image.jpg` from the source render (`video.mp4`, not committed):
+`scripts/prepare_video.py` rebuilds everything in `public/video`, `app/opengraph-image.jpg`
+and `lib/video.manifest.json` from the source render (`video.mp4`, 24 fps, not committed).
+The site ships a 60 fps version: the script creates the in-between frames with ffmpeg's
+motion-compensated interpolation, so scrolling steps through real intermediate frames
+(about ten minutes the first time; the result is cached in `.video-work`):
 
 ```bash
-python scripts/prepare_video.py --ffmpeg /path/to/ffmpeg
+python scripts/prepare_video.py --src ../video.mp4 --interpolate 60 --ffmpeg /path/to/ffmpeg
 ```
 
-Requires Python 3.10+, numpy, Pillow and an ffmpeg with libx264 and libwebp. The
-script also blanks the registration characters on the rear plate in the closing
-shots (frames 197–239), keeping only the blue "P" strip.
+Requires Python 3.10+, numpy, Pillow and an ffmpeg with libx264 and libwebp. The script
+also blanks the registration characters on the rear plate in the closing shots, keeping
+only the blue "P" strip. Plate positions are measured on the 24 fps render (frames 197–239)
+and mapped by time, so any frame rate works; `--debug` renders before/after sheets to check
+them. Keyframes come every third of a second whatever the frame rate, so a seek never
+decodes more than that. A file re-encoded to "60 fps" that only repeats frames gains
+nothing: always start from the original render.
 
 | Asset                               | Size    | Notes                                       |
 | ----------------------------------- | ------- | ------------------------------------------- |
-| `taxi-flow-cinematic.mp4`           | 6.7 MB  | 1080p H.264, CRF 25, GOP 8, no B-frames     |
-| `taxi-flow-cinematic-720.mp4`       | 4.0 MB  | Screens ≤ 767 px wide, Save-Data, 2G        |
-| `frames/000–239.webp`               | 10.7 MB | Fallback only, never loaded otherwise       |
+| `taxi-flow-cinematic.mp4`           | 7.3 MB  | 1080p H.264, 60 fps (596 frames), CRF 25, GOP 20, no B-frames |
+| `taxi-flow-cinematic-720.mp4`       | 4.4 MB  | Same at 720p: screens ≤ 767 px wide, Save-Data, 2G |
+| `frames/000–237.webp`               | 10.0 MB | Fallback only (24 per second), never loaded otherwise |
 | posters, OG image                   | < 1 MB  |                                             |
 
 ## QA switches
@@ -167,7 +175,8 @@ shots (frames 197–239), keeping only the blue "P" strip.
 validation, and webhook delivery (retries, timeouts, duplicates, Google HTML answers).
 
 Checked in headless Edge against the production build (1440×900 and 390×844): the
-headlamps flash in the opening; scroll smoothing converges on the scroll position; all nine screens
+headlamps flash in the opening; the 60 fps video matches the scroll position frame for frame,
+with seeks around 5 ms median (8 ms p90) during a fast sweep; scroll smoothing converges on the scroll position; all nine screens
 load and are fully open once passed; the viewer opens the ×2 capture, zooms around the
 clicked point, moves with the arrow keys, closes with Escape or a click outside, returns
 focus and unlocks page scrolling; the form keeps the data and the request reference when

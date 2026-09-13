@@ -14,7 +14,7 @@ import {
 } from "./camera";
 import { clamp, easeInOut, easeOut, interpolate, lerp, range } from "./math";
 import { flashKeyframes } from "./flash";
-import { HEADLAMP_LINE, SHIFT_CLOCK, STORY } from "./story";
+import { HEADLAMP_LINE, SHIFT_CLOCK, STORY, STORY_FRAMES } from "./story";
 
 type Phase = "intro" | "cinema" | "cta";
 
@@ -168,13 +168,13 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
     const intro = state.intro;
 
     // Video: scroll position is the playhead.
-    const exactFrame = v * (HERO_VIDEO.frameCount - 1);
-    player.setFrame(Math.round(exactFrame));
+    player.setProgress(v);
+    const storyFrame = v * (STORY_FRAMES - 1);
 
     // Camera: tilt from the headlamps to the whole car while the aperture opens.
     const scope = easeInOut(range(v, ...STORY.apertureScope));
     const open = easeInOut(range(v, ...STORY.apertureFull));
-    const camera = frameCamera(vw, vh, HERO_VIDEO.aspect, focusAt(exactFrame), layout.camera);
+    const camera = frameCamera(vw, vh, HERO_VIDEO.aspect, focusAt(storyFrame), layout.camera);
     const lamp = headlampCamera(camera, vw, layout.slitCenter, HEADLAMP_LINE);
     const rect = mixRect(lamp, camera, easeInOut(clamp(scope * 0.3 + open * 0.7)));
     style.set(

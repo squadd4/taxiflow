@@ -21,8 +21,8 @@ export interface ScrollVideoHandle {
   start(): void;
   /** Release media and fall back to the static poster. */
   stop(): void;
-  /** Show a frame. Safe to call on every animation frame. */
-  setFrame(frame: number): void;
+  /** Show the frame at this point of the video, 0 to 1. Safe to call on every animation frame. */
+  setProgress(progress: number): void;
 }
 
 interface NetworkInformation {
@@ -53,8 +53,8 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
     scrubber: VideoScrubber | null;
     frames: FrameSequence | null;
     source: ScrubSource;
-    frame: number;
-  }>({ scrubber: null, frames: null, source: "poster", frame: 0 });
+    progress: number;
+  }>({ scrubber: null, frames: null, source: "poster", progress: 0 });
 
   useImperativeHandle(ref, () => {
     const m = media.current;
@@ -72,10 +72,13 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
       frame.dataset.source = source;
     };
 
+    const videoFrame = () => Math.round(m.progress * (HERO_VIDEO.frameCount - 1));
+    const fallbackFrame = () => Math.round(m.progress * (HERO_VIDEO.fallbackFrameCount - 1));
+
     const switchToFrames = () => {
       if (m.frames) return;
       m.frames = new FrameSequence(canvas, {
-        count: HERO_VIDEO.frameCount,
+        count: HERO_VIDEO.fallbackFrameCount,
         url: HERO_VIDEO.frameUrl,
         onFirstFrame: () => {
           setSource("frames");
@@ -83,8 +86,8 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
           m.scrubber = null;
         },
       });
-      m.frames.start(m.frame);
-      m.frames.setFrame(m.frame);
+      m.frames.start(fallbackFrame());
+      m.frames.setFrame(fallbackFrame());
     };
 
     return {
@@ -99,7 +102,7 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
       get currentTime() {
         return m.scrubber && m.source === "video"
           ? m.scrubber.currentTime
-          : m.frame / HERO_VIDEO.fps;
+          : (m.progress * HERO_VIDEO.frameCount) / HERO_VIDEO.fps;
       },
       start() {
         if (m.scrubber || m.frames) return;
@@ -118,20 +121,20 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
           onError: switchToFrames,
         });
         void m.scrubber.load(small ? HERO_VIDEO.srcSmall : HERO_VIDEO.src);
-        m.scrubber.setFrame(m.frame);
+        m.scrubber.setFrame(videoFrame());
       },
       stop() {
         m.scrubber?.destroy();
         m.frames?.destroy();
         m.scrubber = null;
         m.frames = null;
-        m.frame = 0;
+        m.progress = 0;
         setSource("poster");
       },
-      setFrame(frame: number) {
-        m.frame = frame;
-        m.frames?.setFrame(frame);
-        m.scrubber?.setFrame(frame);
+      setProgress(progress: number) {
+        m.progress = progress;
+        m.frames?.setFrame(fallbackFrame());
+        m.scrubber?.setFrame(videoFrame());
       },
     };
   }, []);
