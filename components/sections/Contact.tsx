@@ -75,8 +75,8 @@ export default function Contact() {
             Pede um orçamento
           </h2>
           <p className={styles.lead}>
-            Conta-nos como trabalhas e o que queres que a app faça. Respondemos por email com
-            uma proposta para a tua app.
+            Conta-nos como trabalhas, sozinho ou com frota, e o que precisas que a aplicação
+            faça. Respondemos por email com uma proposta.
           </p>
         </div>
 
@@ -140,7 +140,7 @@ export default function Contact() {
               data-invalid={Boolean(errors.type)}
               aria-describedby={errors.type ? `${id("type")}-error` : undefined}
             >
-              <legend className={styles.label}>A app é para</legend>
+              <legend className={styles.label}>A aplicação é para</legend>
               <div className={styles.options} role="radiogroup" aria-invalid={Boolean(errors.type)}>
                 <label className={styles.option}>
                   <input
@@ -159,7 +159,7 @@ export default function Contact() {
                     value="empresa"
                     defaultChecked={values.type === "empresa"}
                   />
-                  <span>Uma empresa de táxis</span>
+                  <span>A minha empresa de táxis</span>
                 </label>
               </div>
               {errors.type && (
@@ -171,8 +171,8 @@ export default function Contact() {
 
             <Field
               field="message"
-              label="O que precisas que a app faça"
-              hint="Por exemplo: comissões da empresa, vários carros, relatórios para a contabilidade."
+              label="O que precisas que a aplicação faça"
+              hint="Por exemplo: comissões da empresa, várias viaturas, turnos e folgas, relatórios para a contabilidade."
               error={errors.message}
             >
               <textarea
@@ -188,6 +188,8 @@ export default function Contact() {
               />
             </Field>
 
+            <input type="hidden" name="requestId" value={state.requestId ?? ""} />
+
             {/* Honeypot: invisible to people, tempting to bots. */}
             <div className={styles.trap} aria-hidden="true">
               <label htmlFor={id("website")}>Não preencher</label>
@@ -196,8 +198,17 @@ export default function Contact() {
 
             {state.status === "error" && (
               <div ref={noticeRef} className={styles.failed} role="alert" tabIndex={-1}>
-                O pedido não foi enviado por um problema do nosso lado. Tenta outra vez daqui a
-                alguns minutos.
+                {state.message}
+                {state.contactEmail && (
+                  <>
+                    {" "}
+                    Se preferires, escreve-nos para{" "}
+                    <a className={styles.failedLink} href={`mailto:${state.contactEmail}`}>
+                      {state.contactEmail}
+                    </a>
+                    .
+                  </>
+                )}
               </div>
             )}
 

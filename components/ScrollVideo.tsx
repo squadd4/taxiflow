@@ -13,6 +13,8 @@ export interface ScrollVideoHandle {
   readonly frame: HTMLDivElement;
   readonly dim: HTMLDivElement;
   readonly glow: HTMLDivElement;
+  /** Headlamp overlay of the opening shot. */
+  readonly lamps: HTMLDivElement;
   readonly source: ScrubSource;
   readonly currentTime: number;
   /** Load media for scroll control. */
@@ -44,6 +46,7 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
   const frameRef = useRef<HTMLDivElement>(null);
   const dimRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const lampsRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const media = useRef<{
@@ -60,6 +63,7 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
     const frame = frameRef.current!;
     const dim = dimRef.current!;
     const glow = glowRef.current!;
+    const lamps = lampsRef.current!;
     const video = videoRef.current!;
     const canvas = canvasRef.current!;
 
@@ -88,6 +92,7 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
       frame,
       dim,
       glow,
+      lamps,
       get source() {
         return m.source;
       },
@@ -165,6 +170,10 @@ export default function ScrollVideo({ ref }: { ref?: Ref<ScrollVideoHandle> }) {
         />
         <canvas ref={canvasRef} className={styles.media} width={1280} height={720} />
         <div ref={glowRef} className={styles.glow} />
+        <div ref={lampsRef} className={styles.lamps}>
+          <span className={styles.lampGlow} />
+          <span className={styles.lampFlash} data-lamp="flash" />
+        </div>
       </div>
       <div ref={dimRef} className={styles.dim} />
     </div>

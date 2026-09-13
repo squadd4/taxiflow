@@ -2,20 +2,20 @@ import styles from "./sections.module.css";
 
 const STEPS = [
   {
-    title: "Conversamos",
-    text: "Contas-nos como é o teu turno, como recebes e que contas tens de entregar.",
+    title: "Falamos contigo",
+    text: "Contas-nos como são os teus turnos, como recebes e que contas tens de entregar à empresa.",
   },
   {
-    title: "Preparamos a primeira versão",
-    text: "Montamos a app com as tuas regras e revemos contigo o que ainda falta mudar.",
+    title: "Montamos a primeira versão",
+    text: "Com as tuas regras de comissões e despesas. Revemos tudo contigo antes de a pores a trabalhar.",
   },
   {
     title: "Começas a usar",
-    text: "Instalas no telemóvel ou abres no computador. Continua a funcionar sem rede.",
+    text: "No telemóvel ou no computador. Continua a funcionar sem rede e acerta tudo quando a ligação volta.",
   },
   {
     title: "Ajustamos pelo caminho",
-    text: "Quando o teu trabalho muda, a app muda também.",
+    text: "Mudou a comissão, entrou um motorista ou chegou uma viatura nova? A aplicação acompanha.",
   },
 ];
 
@@ -23,7 +23,7 @@ export default function HowItWorks() {
   return (
     <section id="como-funciona" className={styles.section} aria-labelledby="como-funciona-title">
       <h2 id="como-funciona-title" className={styles.heading}>
-        Como fazemos a tua app
+        Como trabalhamos
       </h2>
       <ol className={styles.list}>
         {STEPS.map((step, i) => (

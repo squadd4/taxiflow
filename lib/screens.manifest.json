@@ -1,0 +1,173 @@
+[
+  {
+    "id": "painel",
+    "capture": "n1.png",
+    "small": {
+      "src": "/images/app/painel-720.webp",
+      "width": 720,
+      "height": 454
+    },
+    "base": {
+      "src": "/images/app/painel.webp",
+      "width": 946,
+      "height": 597
+    },
+    "large": {
+      "src": "/images/app/painel-2x.webp",
+      "width": 1892,
+      "height": 1194
+    }
+  },
+  {
+    "id": "mapa",
+    "capture": "n3.png",
+    "small": {
+      "src": "/images/app/mapa-720.webp",
+      "width": 720,
+      "height": 456
+    },
+    "base": {
+      "src": "/images/app/mapa.webp",
+      "width": 935,
+      "height": 592
+    },
+    "large": {
+      "src": "/images/app/mapa-2x.webp",
+      "width": 1870,
+      "height": 1184
+    }
+  },
+  {
+    "id": "historico",
+    "capture": "n2.png",
+    "small": {
+      "src": "/images/app/historico-720.webp",
+      "width": 720,
+      "height": 461
+    },
+    "base": {
+      "src": "/images/app/historico.webp",
+      "width": 932,
+      "height": 597
+    },
+    "large": {
+      "src": "/images/app/historico-2x.webp",
+      "width": 1864,
+      "height": 1194
+    }
+  },
+  {
+    "id": "estatisticas",
+    "capture": "n5.png",
+    "small": {
+      "src": "/images/app/estatisticas-720.webp",
+      "width": 720,
+      "height": 449
+    },
+    "base": {
+      "src": "/images/app/estatisticas.webp",
+      "width": 901,
+      "height": 562
+    },
+    "large": {
+      "src": "/images/app/estatisticas-2x.webp",
+      "width": 1802,
+      "height": 1124
+    }
+  },
+  {
+    "id": "saldos",
+    "capture": "n4.png",
+    "small": {
+      "src": "/images/app/saldos-720.webp",
+      "width": 720,
+      "height": 461
+    },
+    "base": {
+      "src": "/images/app/saldos.webp",
+      "width": 937,
+      "height": 600
+    },
+    "large": {
+      "src": "/images/app/saldos-2x.webp",
+      "width": 1874,
+      "height": 1200
+    }
+  },
+  {
+    "id": "relatorios",
+    "capture": "n6.png",
+    "small": {
+      "src": "/images/app/relatorios-720.webp",
+      "width": 720,
+      "height": 440
+    },
+    "base": {
+      "src": "/images/app/relatorios.webp",
+      "width": 892,
+      "height": 545
+    },
+    "large": {
+      "src": "/images/app/relatorios-2x.webp",
+      "width": 1784,
+      "height": 1090
+    }
+  },
+  {
+    "id": "frota",
+    "capture": "n8.png",
+    "small": {
+      "src": "/images/app/frota-720.webp",
+      "width": 720,
+      "height": 466
+    },
+    "base": {
+      "src": "/images/app/frota.webp",
+      "width": 752,
+      "height": 487
+    },
+    "large": {
+      "src": "/images/app/frota-2x.webp",
+      "width": 1504,
+      "height": 974
+    }
+  },
+  {
+    "id": "objetivos",
+    "capture": "n7.png",
+    "small": {
+      "src": "/images/app/objetivos-720.webp",
+      "width": 720,
+      "height": 423
+    },
+    "base": {
+      "src": "/images/app/objetivos.webp",
+      "width": 922,
+      "height": 542
+    },
+    "large": {
+      "src": "/images/app/objetivos-2x.webp",
+      "width": 1844,
+      "height": 1084
+    }
+  },
+  {
+    "id": "modo-claro",
+    "capture": "modo claro.png",
+    "small": {
+      "src": "/images/app/modo-claro-720.webp",
+      "width": 720,
+      "height": 453
+    },
+    "base": {
+      "src": "/images/app/modo-claro.webp",
+      "width": 937,
+      "height": 590
+    },
+    "large": {
+      "src": "/images/app/modo-claro-2x.webp",
+      "width": 1874,
+      "height": 1180
+    }
+  }
+]

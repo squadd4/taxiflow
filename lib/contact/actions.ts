@@ -1,11 +1,23 @@
 "use server";
 
+import { deliverQuote, type DeliveryFailure } from "./delivery";
 import { readQuoteRequest, type QuoteState } from "./validation";
 
+const KEPT = "Os teus dados continuam no formulário.";
+
+const MESSAGES: Record<DeliveryFailure, string> = {
+  timeout: `O envio demorou demasiado e não conseguimos confirmar que o pedido chegou. ${KEPT} Carrega outra vez em Pedir orçamento: não fica repetido.`,
+  unavailable: `Não conseguimos ligar ao sistema de pedidos. ${KEPT} Tenta outra vez daqui a alguns minutos.`,
+  rejected: `O pedido não foi aceite por um problema do nosso lado. ${KEPT} Tenta outra vez daqui a alguns minutos.`,
+  "not-configured": `Neste momento o formulário não está a receber pedidos. ${KEPT}`,
+};
+
+const REQUEST_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
- * Receives the quote request form. Valid requests are posted as JSON to
- * CONTACT_WEBHOOK_URL (a Google Apps Script web app, Make, Zapier, Formspree…),
- * so delivery can change without touching the site.
+ * Receives the quote request form and sends it to the Google Sheets web app
+ * (CONTACT_WEBHOOK_URL). A failed attempt keeps the typed values and the request
+ * reference, so sending again never creates a duplicate row.
  */
 export async function requestQuote(_previous: QuoteState, formData: FormData): Promise<QuoteState> {
   // Bots fill the hidden field; pretend it worked and deliver nothing.
@@ -14,31 +26,34 @@ export async function requestQuote(_previous: QuoteState, formData: FormData): P
   const result = readQuoteRequest((key) => formData.get(key));
   if (!result.ok) return { status: "invalid", errors: result.errors, values: result.values };
 
-  const webhook = process.env.CONTACT_WEBHOOK_URL;
-  if (!webhook) {
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[orçamento] CONTACT_WEBHOOK_URL is not set; request not delivered:", result.data);
-      return { status: "sent" };
-    }
-    console.error("[orçamento] CONTACT_WEBHOOK_URL is not set; a quote request was not delivered.");
-    return { status: "error", values: result.data };
+  const previousId = String(formData.get("requestId") ?? "");
+  const id = REQUEST_ID.test(previousId) ? previousId : crypto.randomUUID();
+  const receivedAt = new Date().toISOString();
+  const url = process.env.CONTACT_WEBHOOK_URL?.trim();
+
+  if (!url && process.env.NODE_ENV !== "production") {
+    console.info("[orçamento] CONTACT_WEBHOOK_URL is not set; request not delivered:", { ...result.data, id });
+    return { status: "sent" };
   }
 
-  try {
-    const response = await fetch(webhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...result.data,
-        receivedAt: new Date().toISOString(),
-        source: "taxiflow-landing",
-      }),
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return { status: "sent" };
-  } catch (error) {
-    console.error("[orçamento] delivery failed:", error);
-    return { status: "error", values: result.data };
-  }
+  const delivery = await deliverQuote(result.data, {
+    url,
+    secret: process.env.CONTACT_WEBHOOK_SECRET?.trim(),
+    id,
+    receivedAt,
+  });
+  if (delivery.ok) return { status: "sent" };
+
+  // Last resort so no request is lost: the whole request is kept in the server logs.
+  console.error(
+    `[orçamento] NOT DELIVERED (${delivery.reason}: ${delivery.detail}). Recover this request:`,
+    JSON.stringify({ ...result.data, id, receivedAt }),
+  );
+  return {
+    status: "error",
+    message: MESSAGES[delivery.reason],
+    contactEmail: process.env.CONTACT_EMAIL?.trim() || undefined,
+    requestId: id,
+    values: result.data,
+  };
 }

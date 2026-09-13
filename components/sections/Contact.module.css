@@ -245,3 +245,9 @@
     width: 100%;
   }
 }
+
+.failedLink {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

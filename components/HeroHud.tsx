@@ -12,7 +12,7 @@ export default function HeroHud() {
         <span className={styles.fill} data-hero="rail" />
       </span>
       <p className={styles.hint} data-hero="hint">
-        Desliza para conduzir
+        Desliza para arrancar
       </p>
     </div>
   );

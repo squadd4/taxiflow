@@ -28,6 +28,7 @@
 
 .line {
   display: block;
+  text-wrap: balance;
 }
 
 /* Cinematic layout: both lines share one centred slot below the headlamp slit. */

@@ -91,3 +91,56 @@
 :global(html[data-motion="on"]) .dim {
   opacity: 0.5;
 }
+
+/* Headlamps of the opening shot, in frame coordinates so they follow the camera.
+   Positions measured on the first video frame. */
+.lamps {
+  display: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+:global(html[data-motion="on"]) .lamps {
+  display: block;
+}
+
+.lampGlow,
+.lampFlash {
+  position: absolute;
+  inset: 0;
+}
+
+/* Daytime running lights: a slow, faint pulse on the LED strips. */
+.lampGlow {
+  background:
+    radial-gradient(6% 7% at 27% 60%, rgb(214 232 255 / 0.75), rgb(214 232 255 / 0) 70%),
+    radial-gradient(6% 7% at 70.5% 60%, rgb(214 232 255 / 0.75), rgb(214 232 255 / 0) 70%);
+  animation: lamp-breathe 3.2s ease-in-out infinite;
+}
+
+/* Main beams: bright lens cores, a warm bloom and a thin horizontal flare. Animated from lib/hero/engine.ts. */
+.lampFlash {
+  opacity: 0;
+  background:
+    radial-gradient(3.4% 4.4% at 25.5% 61%, rgb(255 255 255), rgb(255 252 240 / 0) 100%),
+    radial-gradient(3.4% 4.4% at 72% 61%, rgb(255 255 255), rgb(255 252 240 / 0) 100%),
+    radial-gradient(11% 12% at 27% 60.5%, rgb(255 246 222), rgb(255 246 222 / 0) 70%),
+    radial-gradient(11% 12% at 70.5% 60.5%, rgb(255 246 222), rgb(255 246 222 / 0) 70%),
+    radial-gradient(34% 2% at 27% 61%, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0) 100%),
+    radial-gradient(34% 2% at 70.5% 61%, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0) 100%),
+    radial-gradient(36% 30% at 49% 62%, rgb(255 244 214 / 0.3), rgb(255 244 214 / 0) 70%);
+}
+
+@keyframes lamp-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}

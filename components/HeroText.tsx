@@ -1,7 +1,7 @@
 import styles from "./HeroText.module.css";
 
-const TITLE = ["O teu táxi.", "Mais inteligente."];
-const SUBTITLE = ["A tecnologia que acompanha", "cada viagem."];
+const TITLE = ["Feito para a estrada.", "E para quem a conhece."];
+const SUBTITLE = ["Corridas, turnos e contas", "numa aplicação à tua medida."];
 
 export default function HeroText() {
   return (

@@ -3,27 +3,35 @@ import styles from "./sections.module.css";
 const ADJUSTMENTS = [
   {
     title: "Registo de corridas",
-    text: "Só os campos de que precisas: valor, forma de pagamento, local ou quilómetros.",
+    text: "Só os campos que usas: valor, forma de pagamento, origem e destino, quilómetros.",
   },
   {
-    title: "Comissões e contas",
-    text: "As percentagens e as regras da tua empresa, com dias úteis, fins de semana e feriados.",
+    title: "Fecho de contas",
+    text: "A tua percentagem e a da empresa, o gasóleo e as despesas, com as regras de dias úteis, fins de semana e feriados.",
   },
   {
-    title: "Pagamentos",
-    text: "Numerário, Multibanco, cartão ou MB WAY, separados como a contabilidade pede.",
+    title: "Turnos e folgas",
+    text: "Turnos de dia ou de noite, folgas e férias, para as médias e os objetivos contarem só os dias trabalhados.",
+  },
+  {
+    title: "Pagamentos e recibos",
+    text: "Numerário, Multibanco, MB WAY e crédito separados, como pedem a contabilidade e os recibos.",
   },
   {
     title: "Relatórios",
-    text: "PDF e Excel no formato que a tua empresa ou o teu contabilista já usa.",
+    text: "PDF e Excel no formato que a empresa ou o contabilista já usam.",
   },
   {
-    title: "Mapa e zonas",
-    text: "As zonas e as rotas que te interessam, a partir das corridas que registas.",
+    title: "Viaturas e alvarás",
+    text: "Várias viaturas e motoristas, com lembretes de inspeções, seguros e alvarás.",
+  },
+  {
+    title: "Mapa e praças",
+    text: "As zonas e as praças onde trabalhas, a partir das corridas que registas.",
   },
   {
     title: "Aspeto",
-    text: "Modo claro ou escuro, com as tuas cores e o teu logótipo.",
+    text: "Modo claro ou escuro, com as cores e o logótipo da tua empresa.",
   },
 ];
 
@@ -39,7 +47,8 @@ export default function Features() {
           O que ajustamos contigo
         </h2>
         <p className={styles.lead}>
-          Partimos do que a app já faz e mudamos o que for preciso para encaixar no teu dia.
+          Partimos do que a aplicação já faz e mudamos o que for preciso para encaixar no teu dia
+          na praça.
         </p>
       </div>
       <dl className={styles.list}>

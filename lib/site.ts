@@ -1,10 +1,10 @@
 export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://taxi-rust-psi.vercel.app";
+  process.env.NEXT_PUBLIC_APP_URL || "https://taxi-rust-psi.vercel.app";
 
 export const NAV_LINKS = [
-  { href: "#plataforma", label: "Plataforma" },
-  { href: "#funcionalidades", label: "Funcionalidades" },
-  { href: "#como-funciona", label: "Como funciona" },
+  { href: "#plataforma", label: "Aplicação" },
+  { href: "#funcionalidades", label: "À medida" },
+  { href: "#como-funciona", label: "Como trabalhamos" },
   { href: "#contacto", label: "Pedir orçamento" },
 ] as const;
 

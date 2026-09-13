@@ -18,6 +18,12 @@ export interface QuoteState {
   errors?: QuoteErrors;
   /** What the person typed, so the form can be filled back in after a failed attempt. */
   values?: Partial<Record<QuoteField, string>>;
+  /** Explanation shown when delivery failed. */
+  message?: string;
+  /** Address offered as an alternative when delivery failed. */
+  contactEmail?: string;
+  /** Reference of a failed request, sent again so a retry is not written twice. */
+  requestId?: string;
 }
 
 export const LIMITS = { name: 120, email: 200, phone: 30, message: 3000 } as const;
@@ -59,9 +65,9 @@ export function readQuoteRequest(get: (key: string) => unknown): QuoteResult {
     errors.phone = "Confirma o número: só algarismos, com o indicativo se não for português.";
 
   if (values.type !== "motorista" && values.type !== "empresa")
-    errors.type = "Escolhe se a app é para ti como motorista ou para uma empresa.";
+    errors.type = "Escolhe se a aplicação é para ti, como motorista, ou para uma empresa.";
 
-  if (!values.message) errors.message = "Conta-nos em poucas linhas o que precisas que a app faça.";
+  if (!values.message) errors.message = "Conta-nos em poucas linhas o que precisas que a aplicação faça.";
   else if (values.message.length > LIMITS.message)
     errors.message = `A mensagem é longa demais. Resume em até ${LIMITS.message} caracteres.`;
 

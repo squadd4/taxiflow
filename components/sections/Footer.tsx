@@ -9,7 +9,8 @@ export default function Footer() {
         <div className={styles.footerBrand}>
           <Logo />
           <p className={styles.footerNote}>
-            Apps de gestão feitas à medida para profissionais do táxi.
+            Feito para a estrada e para quem a conhece. Aplicações de gestão à medida de
+            motoristas e empresas de táxi.
           </p>
         </div>
         <nav aria-label="Rodapé">

@@ -9,19 +9,19 @@ const geist = Geist({
 
 /** Absolute URL for social previews: explicit setting, then the Vercel production domain. */
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Taxi Flow | O teu táxi. Mais inteligente.",
+  title: "Taxi Flow | Aplicação de gestão para táxis, feita à medida",
   description:
-    "Gestão de corridas, contas e operação do teu táxi — simples, inteligente e sempre contigo.",
+    "Registo de corridas, faturação diária, fecho de contas e relatórios para a contabilidade. Uma aplicação feita à medida de motoristas e empresas de táxi em Portugal.",
   openGraph: {
     title: "Taxi Flow",
-    description: "A tecnologia que acompanha cada viagem.",
+    description: "Feito para a estrada e para quem a conhece.",
     locale: "pt_PT",
     type: "website",
   },

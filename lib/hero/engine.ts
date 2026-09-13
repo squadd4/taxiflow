@@ -1,6 +1,8 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ScrollVideoHandle } from "@/components/ScrollVideo";
+import { createStyleWriter } from "@/lib/dom/styleWriter";
+import { follow } from "@/lib/motion/follow";
 import { HERO_VIDEO } from "@/lib/site";
 import {
   focusAt,
@@ -11,8 +13,8 @@ import {
   type CameraOptions,
 } from "./camera";
 import { clamp, easeInOut, easeOut, interpolate, lerp, range } from "./math";
+import { flashKeyframes } from "./flash";
 import { HEADLAMP_LINE, SHIFT_CLOCK, STORY } from "./story";
-import { createStyleWriter } from "@/lib/dom/styleWriter";
 
 type Phase = "intro" | "cinema" | "cta";
 
@@ -26,16 +28,31 @@ interface Layout {
   slitHeight: number;
   scopeHeight: number;
   brand: { x: number; y: number; skyX: number; skyY: number; skyScale: number };
+  /** One screen of scrolling in progress units: the gap at which smoothing speeds up. */
+  screenProgress: number;
+  /** Half a pixel of scrolling in progress units: close enough to land. */
+  pixelProgress: number;
 }
+
+/** Scroll smoothing, in seconds to halve the gap: a wheel notch glides, a long jump catches up. */
+const SMOOTHING = { halfLife: 0.085, fastHalfLife: 0.04 };
+/** Longest frame step fed to the smoothing, so a waking ticker never skips the glide. */
+const MAX_STEP_MS = 34;
+/** Seconds into the opening when the headlamps flash. */
+const GREETING_DELAY = 1.3;
+/** The greeting belongs to the opening shot (video progress). */
+const OPENING_END = 0.12;
 
 const px = (n: number) => `${n.toFixed(1)}px`;
 const num = (n: number) => n.toFixed(3);
 
 /**
- * Wires the hero to the scroll position. One ScrollTrigger drives a single
- * progress value; every layer (video frame, camera, aperture, type, HUD,
- * closing CTA) is derived from it in one render pass, so nothing can drift.
- * All high-frequency work is direct DOM writes — React never re-renders.
+ * Wires the hero to the scroll position. ScrollTrigger reports where the page is;
+ * the rendered progress follows it with frame-rate independent smoothing, and every
+ * layer (video frame, camera, aperture, type, HUD, closing CTA) is derived from that
+ * one value in a single render pass, so nothing can drift. All high-frequency work
+ * is direct style writes of transform, opacity and clip-path, with no layout reads,
+ * and React never re-renders.
  *
  * Returns a teardown function. Reduced-motion changes switch layouts live.
  */
@@ -85,6 +102,7 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
     frame: player.frame,
     dim: player.dim,
     glow: player.glow,
+    lamps: player.lamps,
     h1: all("h1-line"),
     h2: all("h2-line"),
     hud: one("hud"),
@@ -111,6 +129,7 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
     const portrait = vw / vh < 1;
     const videoLength = el.spacerVideo.offsetHeight;
     const closingLength = el.spacerCta.offsetHeight;
+    const scrollLength = Math.max(1, el.track.offsetHeight - vh);
 
     // Resting place of the brand mark, measured without its transform.
     const previous = el.brand.style.transform;
@@ -136,6 +155,8 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
         skyY: vh * (portrait ? 0.17 : 0.2),
         skyScale: portrait ? 1.7 : 2.4,
       },
+      screenProgress: vh / scrollLength,
+      pixelProgress: 0.5 / scrollLength,
     };
   }
 
@@ -174,6 +195,11 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
       `inset(${px(top)} ${px(vw - right)} ${px(vh - bottom)} ${px(left)})`,
     );
     style.set(el.dim, "opacity", num(0.5 * (1 - range(v, ...STORY.dimLift))));
+
+    // Headlamps of the opening shot: lit as the slit opens, gone once the car moves.
+    const lamps = easeOut(range(intro, 0.2, 0.55)) * (1 - range(v, 0, 0.015));
+    style.set(el.lamps, "opacity", num(lamps));
+    style.set(el.lamps, "visibility", lamps > 0 ? "visible" : "hidden");
 
     // Typography.
     el.h1.forEach((line, i) => {
@@ -241,25 +267,62 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
 
   player.start();
 
-  const scrub = gsap.to(state, {
-    progress: 1,
-    ease: "none",
-    onUpdate: render,
-    scrollTrigger: {
-      trigger: el.track,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.5,
-      invalidateOnRefresh: true,
-      onRefresh: () => {
-        if (disposed) return;
-        layout = measure();
+  const flashLayer = el.lamps.querySelector<HTMLElement>('[data-lamp="flash"]');
+  let flash: Animation | null = null;
+
+  // The scroll position sets a target; the rendered progress follows it smoothly.
+  let target = 0;
+  let following = false;
+  let jump = false;
+  const followStep = (_time: number, deltaTime: number) => {
+    if (disposed) return;
+    state.progress = follow(state.progress, target, Math.min(deltaTime, MAX_STEP_MS) / 1000, {
+      ...SMOOTHING,
+      far: layout.screenProgress,
+      epsilon: layout.pixelProgress,
+    });
+    render();
+    if (state.progress === target) stopFollowing();
+  };
+
+  function startFollowing() {
+    if (following) return;
+    following = true;
+    gsap.ticker.add(followStep);
+  }
+
+  function stopFollowing() {
+    if (!following) return;
+    following = false;
+    gsap.ticker.remove(followStep);
+  }
+
+  const trigger = ScrollTrigger.create({
+    trigger: el.track,
+    start: "top top",
+    end: "bottom bottom",
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      target = self.progress;
+      if (jump) {
+        jump = false;
+        stopFollowing();
+        state.progress = target;
         render();
-      },
+        return;
+      }
+      startFollowing();
+    },
+    onRefresh: (self) => {
+      if (disposed) return;
+      layout = measure();
+      stopFollowing();
+      target = state.progress = self.progress;
+      render();
     },
   });
 
-  // One orchestrated load moment: the slit opens and the headline rises.
+  // One orchestrated load moment: the slit opens, the headline rises, the headlamps flash.
   const intro = gsap.to(state, {
     intro: 1,
     duration: 2.4,
@@ -267,8 +330,15 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
     paused: true,
     onUpdate: render,
   });
+  let greeting: ReturnType<typeof gsap.delayedCall> | null = null;
   const startIntro = () => {
-    if (!disposed) intro.play();
+    if (disposed || greeting) return;
+    intro.play();
+    greeting = gsap.delayedCall(GREETING_DELAY, () => {
+      if (disposed || clamp(state.progress / layout.split) >= OPENING_END) return;
+      const { keyframes, duration } = flashKeyframes();
+      flash = flashLayer?.animate(keyframes, { duration, easing: "linear" }) ?? null;
+    });
   };
   let introTimer = window.setTimeout(startIntro, 1500);
   const poster = el.frame.querySelector("img");
@@ -279,12 +349,14 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
       introTimer = window.setTimeout(startIntro, 150);
     });
 
-  // Keyboard users tabbing into the CTA are brought to the point where it is visible.
+  // Keyboard users tabbing into the CTA are brought straight to the point where it is visible.
+  let jumpTimer = 0;
   const onFocusIn = (event: FocusEvent) => {
     if (interactive || !el.cta.contains(event.target as Node)) return;
-    const trigger = scrub.scrollTrigger;
-    if (!trigger) return;
     const at = layout.split + (1 - layout.split) * 0.8;
+    jump = true;
+    window.clearTimeout(jumpTimer);
+    jumpTimer = window.setTimeout(() => (jump = false), 200);
     window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * at, behavior: "instant" });
   };
   root.addEventListener("focusin", onFocusIn);
@@ -296,6 +368,9 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
       __taxiflowHero: {
         get progress() {
           return state.progress;
+        },
+        get target() {
+          return target;
         },
         get video() {
           return clamp(state.progress / layout.split);
@@ -310,8 +385,7 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
           return player.currentTime;
         },
         get scroll() {
-          const t = scrub.scrollTrigger!;
-          return { start: t.start, end: t.end, split: layout.split };
+          return { start: trigger.start, end: trigger.end, split: layout.split };
         },
       },
     });
@@ -322,11 +396,14 @@ function runCinematic(root: HTMLElement, player: ScrollVideoHandle) {
   return () => {
     disposed = true;
     window.clearTimeout(introTimer);
+    window.clearTimeout(jumpTimer);
     root.removeEventListener("focusin", onFocusIn);
+    stopFollowing();
+    greeting?.kill();
     // kill() without revert: nothing renders during teardown.
     intro.kill();
-    scrub.scrollTrigger?.kill();
-    scrub.kill();
+    trigger.kill();
+    flash?.cancel();
     player.stop();
     style.clear();
     delete el.cta.dataset.interactive;

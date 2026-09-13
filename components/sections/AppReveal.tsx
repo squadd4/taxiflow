@@ -1,98 +1,74 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createScreenReveal } from "@/lib/reveal/controller";
+import { SCREENS, type Screen } from "@/lib/screens";
+import ScreenViewer from "./ScreenViewer";
 import styles from "./AppReveal.module.css";
 
-interface Screen {
-  id: string;
-  src: string;
-  small?: string;
-  width: number;
-  height: number;
-  title: string;
-  text: string;
-  alt: string;
-}
-
-/** Captures exported by scripts/prepare_screens.py. */
-const SCREENS = {
-  hoje: {
-    id: "hoje",
-    src: "/images/app/hoje.webp",
-    small: "/images/app/hoje-960.webp",
-    width: 1600,
-    height: 757,
-    title: "Hoje",
-    text: "Faturação, meta do dia e corridas em direto.",
-    alt: "Ecrã Hoje da app Taxi Flow, com a faturação do dia, a meta diária e a lista de corridas.",
-  },
-  mapa: {
-    id: "mapa",
-    src: "/images/app/mapa.webp",
-    small: "/images/app/mapa-960.webp",
-    width: 1440,
-    height: 754,
-    title: "Mapa",
-    text: "As zonas onde trabalhas e quanto rende cada uma.",
-    alt: "Mapa com as localizações das corridas entre Leiria e Torres Vedras e a lista das zonas que mais faturam.",
-  },
-  historico: {
-    id: "historico",
-    src: "/images/app/historico.webp",
-    small: "/images/app/historico-960.webp",
-    width: 1600,
-    height: 764,
-    title: "Histórico",
-    text: "Semanas, meses e anos, com quilómetros e férias.",
-    alt: "Ecrã Histórico com as corridas agrupadas por semana, valores brutos e valores para a empresa.",
-  },
-  estatisticas: {
-    id: "estatisticas",
-    src: "/images/app/estatisticas.webp",
-    width: 557,
-    height: 762,
-    title: "Estatísticas",
-    text: "Aqui em modo claro.",
-    alt: "Estatísticas do ano em modo claro: faturação, quilómetros, gráfico diário e formas de pagamento.",
-  },
-  relatorios: {
-    id: "relatorios",
-    src: "/images/app/relatorios.webp",
-    small: "/images/app/relatorios-960.webp",
-    width: 995,
-    height: 825,
-    title: "Relatórios",
-    text: "PDF e Excel prontos a enviar.",
-    alt: "Ecrã de exportação com a pré-visualização do mês e botões para descarregar PDF e Excel.",
-  },
-} satisfies Record<string, Screen>;
-
-function Shot({ screen }: { screen: Screen }) {
+function Shot({
+  screen,
+  index,
+  side,
+  onOpen,
+}: {
+  screen: Screen;
+  index: number;
+  side: "left" | "right";
+  onOpen: (index: number) => void;
+}) {
+  const captionId = `ecra-${screen.id}`;
+  const { small, base, large } = screen;
   return (
     <figure
       className={styles.screen}
       data-reveal="screen"
-      data-screen={screen.id}
-      style={{ "--ratio": screen.width / screen.height } as CSSProperties}
+      data-feature={screen.feature}
+      data-side={side}
+      style={{ "--ratio": base.width / base.height } as CSSProperties}
     >
-      <div className={styles.media} data-reveal="media">
-        {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized WebP exported by scripts/prepare_screens.py */}
-        <img
-          className={styles.shot}
-          data-reveal="shot"
-          src={screen.src}
-          srcSet={screen.small ? `${screen.small} 960w, ${screen.src} ${screen.width}w` : undefined}
-          sizes="(min-width: 768px) 50vw, 100vw"
-          width={screen.width}
-          height={screen.height}
-          alt={screen.alt}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <figcaption className={styles.caption} data-reveal="caption">
-        <span className={styles.captionTitle}>{screen.title}</span> {screen.text}
+      <button
+        type="button"
+        className={styles.trigger}
+        onClick={() => onOpen(index)}
+        aria-haspopup="dialog"
+        aria-label={`Ver em grande: ${screen.title}`}
+        aria-describedby={captionId}
+      >
+        <span className={styles.media} data-reveal="media">
+          <span className={styles.curtain} data-reveal="curtain">
+            {/* eslint-disable-next-line @next/next/no-img-element -- sizes exported by scripts/prepare_screens.py */}
+            <img
+              className={styles.shot}
+              data-reveal="shot"
+              src={base.src}
+              srcSet={`${small.src} ${small.width}w, ${base.src} ${base.width}w, ${large.src} ${large.width}w`}
+              sizes={
+                screen.feature
+                  ? "(min-width: 1100px) 60vw, (min-width: 768px) 90vw, 100vw"
+                  : "(min-width: 768px) 46vw, 100vw"
+              }
+              width={base.width}
+              height={base.height}
+              alt={screen.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+          <span className={styles.zoom} aria-hidden="true">
+            <svg viewBox="0 0 20 20" focusable="false">
+              <path d="M8.5 3.5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-1.5a6.5 6.5 0 0 1 5.2 10.4l3.3 3.3-1.1 1.1-3.3-3.3A6.5 6.5 0 1 1 8.5 2Zm-.75 3.5h1.5v2.25h2.25v1.5H9.25V11.5h-1.5V9.25H5.5v-1.5h2.25z" />
+            </svg>
+            Ampliar
+          </span>
+        </span>
+      </button>
+      <figcaption id={captionId} className={styles.caption} data-reveal="caption">
+        <span className={styles.number} aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <span className={styles.title}>{screen.title}</span>
+        <span className={styles.text}>{screen.text}</span>
       </figcaption>
     </figure>
   );
@@ -100,31 +76,30 @@ function Shot({ screen }: { screen: Screen }) {
 
 export default function AppReveal() {
   const rootRef = useRef<HTMLElement>(null);
+  const [open, setOpen] = useState<number | null>(null);
 
   useEffect(() => createScreenReveal(rootRef.current!), []);
 
+  let features = 0;
   return (
     <section ref={rootRef} id="plataforma" className={styles.section} aria-labelledby="plataforma-title">
       <div className={styles.intro}>
         <h2 id="plataforma-title" className={styles.heading}>
-          Fazemos a app como tu a quiseres
+          Uma aplicação feita à medida da tua praça
         </h2>
         <p className={styles.lead}>
-          Isto é o Taxi Flow a funcionar todos os dias. A tua versão pode ser diferente:
-          escolhes o que registas, como se fazem as contas e o que aparece no ecrã.
+          Estes são ecrãs reais do Taxi Flow. A tua versão pode ter outros campos, outras contas e
+          outro aspeto: decides tu. Carrega em qualquer ecrã para o ver em grande, com todo o
+          detalhe.
         </p>
       </div>
       <div className={styles.wall}>
-        <div className={styles.row}>
-          <Shot screen={SCREENS.hoje} />
-          <Shot screen={SCREENS.mapa} />
-        </div>
-        <div className={styles.row}>
-          <Shot screen={SCREENS.historico} />
-          <Shot screen={SCREENS.estatisticas} />
-          <Shot screen={SCREENS.relatorios} />
-        </div>
+        {SCREENS.map((screen, index) => {
+          const side = screen.feature && features++ % 2 === 1 ? "right" : "left";
+          return <Shot key={screen.id} screen={screen} index={index} side={side} onOpen={setOpen} />;
+        })}
       </div>
+      <ScreenViewer screens={SCREENS} index={open} onIndexChange={setOpen} />
     </section>
   );
 }

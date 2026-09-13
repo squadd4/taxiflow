@@ -1,4 +1,4 @@
-import { APP_URL, HERO_VIDEO } from "@/lib/site";
+import { HERO_VIDEO } from "@/lib/site";
 import ButtonLink from "./ButtonLink";
 import Logo from "./Logo";
 import styles from "./CTA.module.css";
@@ -23,16 +23,16 @@ export default function CTA() {
           <Logo />
         </p>
         <h2 id="cta-title" className={styles.title} data-hero="cta-item">
-          O teu próximo nível começa aqui.
+          Diz-nos como trabalhas. Nós fazemos a aplicação.
         </h2>
         <p className={styles.lead} data-hero="cta-item">
-          Gestão de corridas, contas e operação do teu táxi — simples, inteligente e
-          sempre contigo.
+          Registo de corridas, fecho de contas e relatórios para a contabilidade, feitos à
+          medida de motoristas e empresas de táxi.
         </p>
         <div className={styles.actions} data-hero="cta-item">
-          <ButtonLink href={APP_URL}>Entrar no Taxi Flow</ButtonLink>
+          <ButtonLink href="#contacto">Pedir orçamento</ButtonLink>
           <ButtonLink href="#plataforma" variant="secondary">
-            Conhecer a plataforma
+            Ver a aplicação
           </ButtonLink>
         </div>
       </div>
