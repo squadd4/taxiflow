@@ -1,0 +1,247 @@
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(112px, 14vw, 200px) var(--gutter) 0;
+  scroll-margin-top: var(--nav-height);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 48px clamp(32px, 6vw, 96px);
+}
+
+.heading {
+  max-width: 12ch;
+  font-size: clamp(2.1rem, 4.4vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 38ch;
+  margin-top: 20px;
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--gray);
+  text-wrap: pretty;
+}
+
+.form {
+  position: relative;
+  display: grid;
+  gap: 26px;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px 20px;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.label {
+  padding: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--gray);
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--gray);
+}
+
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--white);
+  background: var(--ink);
+  border: 1px solid rgb(242 243 239 / 0.18);
+  border-radius: 4px;
+  transition: border-color 0.2s var(--ease-out);
+}
+
+.input:hover {
+  border-color: rgb(242 243 239 / 0.34);
+}
+
+.input:focus-visible {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+  border-color: #f08a82;
+}
+
+.textarea {
+  min-height: 150px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.error {
+  font-size: 0.875rem;
+  color: #f08a82;
+}
+
+.choice {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.option {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The real radio covers the visible pill, so pointer, keyboard and screen readers use it. */
+.option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.option span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 18px;
+  font-size: 0.9375rem;
+  color: var(--gray);
+  border: 1px solid rgb(242 243 239 / 0.18);
+  border-radius: 4px;
+  transition:
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out),
+    background-color 0.2s var(--ease-out);
+}
+
+.option:hover span {
+  border-color: rgb(242 243 239 / 0.34);
+}
+
+.option input:checked + span {
+  color: var(--white);
+  background: rgb(61 170 110 / 0.14);
+  border-color: var(--green);
+}
+
+.option input:focus-visible + span {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.choice[data-invalid="true"] .option span {
+  border-color: #f08a82;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.submit {
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+
+.note {
+  max-width: 34ch;
+  font-size: 0.875rem;
+  color: var(--gray);
+}
+
+.failed {
+  padding: 14px 16px;
+  font-size: 0.9375rem;
+  color: var(--white);
+  background: rgb(240 138 130 / 0.1);
+  border: 1px solid rgb(240 138 130 / 0.5);
+  border-radius: 4px;
+}
+
+.done {
+  padding: 32px;
+  border: 1px solid var(--green);
+  border-radius: 4px;
+}
+
+.doneTitle {
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.doneText {
+  max-width: 44ch;
+  margin-top: 8px;
+  color: var(--gray);
+}
+
+.failed:focus-visible,
+.done:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .pair {
+    grid-template-columns: 1fr;
+  }
+
+  .submit {
+    width: 100%;
+  }
+}

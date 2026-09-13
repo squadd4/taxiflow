@@ -1,0 +1,71 @@
+/* Static layout: headline block at the foot of the first screen. */
+.text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 18px;
+  min-height: max(100svh, 560px);
+  margin: 0;
+  padding: calc(var(--nav-height) + 40px) var(--gutter) max(72px, 12svh);
+}
+
+.title {
+  font-size: clamp(2.75rem, min(6.6vw, 11.5vh), 7rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.subtitle {
+  font-size: clamp(1.25rem, 2.4vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--gray);
+}
+
+.line {
+  display: block;
+}
+
+/* Cinematic layout: both lines share one centred slot below the headlamp slit. */
+:global(html[data-motion="on"]) .text {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+:global(html[data-motion="on"]) .title,
+:global(html[data-motion="on"]) .subtitle {
+  position: absolute;
+  top: 60%;
+  left: var(--gutter);
+  right: var(--gutter);
+  text-align: center;
+}
+
+/* Sits below the wider scope band that replaces the slit. */
+:global(html[data-motion="on"]) .subtitle {
+  top: 67%;
+  font-size: clamp(2rem, min(4.4vw, 8vh), 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--white);
+}
+
+:global(html[data-motion="on"]) .line {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+  :global(html[data-motion="on"]) .title,
+  :global(html[data-motion="on"]) .subtitle {
+    top: 56%;
+  }
+}

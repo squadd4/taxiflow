@@ -1,0 +1,64 @@
+.hero {
+  position: relative;
+  background: var(--black);
+}
+
+.track,
+.stage {
+  position: relative;
+}
+
+.scrim,
+.spacerVideo,
+.spacerCta {
+  display: none;
+}
+
+/* Cinematic layout: a sticky viewport over a long scroll track. */
+:global(html[data-motion="on"]) .stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+}
+
+:global(html[data-motion="on"]) .spacerVideo {
+  display: block;
+  height: 640vh;
+}
+
+:global(html[data-motion="on"]) .spacerCta {
+  display: block;
+  height: 130vh;
+}
+
+:global(html[data-motion="on"]) .scrim {
+  display: block;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scrim {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.1) 25%, rgb(0 0 0 / 0.78) 78%),
+    linear-gradient(to bottom, transparent 55%, rgb(0 0 0 / 0.92) 100%);
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+  .scrim {
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.05) 15%, rgb(0 0 0 / 0.55) 48%, rgb(0 0 0 / 0.94) 82%);
+  }
+}
+
+@media (max-width: 767px) {
+  :global(html[data-motion="on"]) .spacerVideo {
+    height: 460vh;
+  }
+
+  :global(html[data-motion="on"]) .spacerCta {
+    height: 110vh;
+  }
+}

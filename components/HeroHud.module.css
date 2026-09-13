@@ -1,0 +1,54 @@
+.hud {
+  display: none;
+}
+
+:global(html[data-motion="on"]) .hud {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 28px;
+  bottom: calc(100lvh - 100svh + max(22px, 3.5svh));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 0.8125rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.clock {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.city,
+.hint {
+  color: var(--gray);
+}
+
+.rail {
+  position: relative;
+  flex: 0 1 240px;
+  height: 1px;
+  overflow: hidden;
+  background: rgb(242 243 239 / 0.2);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@media (max-width: 520px) {
+  .rail {
+    display: none;
+  }
+}

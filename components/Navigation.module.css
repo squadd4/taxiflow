@@ -1,0 +1,236 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+/* Soft shade keeps the bar legible over bright sky without drawing a box. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -48px;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.5), transparent);
+  pointer-events: none;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  height: var(--nav-height);
+  padding: 0 var(--gutter);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out);
+}
+
+.header[data-solid="true"]::before {
+  opacity: 0;
+}
+
+.header[data-solid="true"] .bar {
+  background: rgb(0 0 0 / 0.62);
+  border-bottom-color: var(--line);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+.brand {
+  display: inline-flex;
+  margin-right: auto;
+  padding: 10px 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.links {
+  display: flex;
+  gap: 32px;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.link {
+  position: relative;
+  display: block;
+  padding: 10px 0;
+  font-size: 0.875rem;
+  color: rgb(242 243 239 / 0.76);
+  transition: color 0.25s var(--ease-out);
+}
+
+.link:hover,
+.link[aria-current="true"] {
+  color: var(--white);
+}
+
+.link[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.login {
+  padding: 9px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid rgb(242 243 239 / 0.28);
+  border-radius: 4px;
+  transition:
+    border-color 0.25s var(--ease-out),
+    opacity 0.6s var(--ease-out);
+}
+
+.login:hover {
+  border-color: var(--white);
+}
+
+/* While the car owns the screen, the bar steps back until it is used. */
+:global(html[data-hero-phase="cinema"]) .header:not(:hover, :focus-within, [data-solid="true"]) .links,
+:global(html[data-hero-phase="cinema"]) .header:not(:hover, :focus-within, [data-solid="true"]) .login {
+  opacity: 0.36;
+}
+
+:global(html[data-hero-phase="cinema"]) .header:not(:hover, :focus-within, [data-solid="true"]) .brand {
+  opacity: 0.66;
+}
+
+.menuButton,
+.panel {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .links,
+  .login {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -12px;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .burger {
+    position: relative;
+    width: 20px;
+    height: 8px;
+  }
+
+  .burger::before,
+  .burger::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: currentColor;
+    transition:
+      transform 0.45s var(--ease-out),
+      top 0.45s var(--ease-out);
+  }
+
+  .burger::before {
+    top: 0;
+  }
+
+  .burger::after {
+    top: 6.5px;
+  }
+
+  .header[data-open="true"] .burger::before {
+    top: 3.25px;
+    transform: rotate(45deg);
+  }
+
+  .header[data-open="true"] .burger::after {
+    top: 3.25px;
+    transform: rotate(-45deg);
+  }
+
+  .header[data-open="true"]::before {
+    opacity: 0;
+  }
+
+  .panel {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(var(--nav-height) + 32px) var(--gutter) max(28px, env(safe-area-inset-bottom));
+    background: rgb(0 0 0 / 0.94);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s var(--ease-out),
+      visibility 0s linear 0.4s;
+  }
+
+  .header[data-open="true"] .panel {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s var(--ease-out);
+  }
+
+  .panelLinks li {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--i) * 60ms + 80ms);
+  }
+
+  .header[data-open="true"] .panelLinks li {
+    opacity: 1;
+    transform: none;
+  }
+
+  .panelLinks a {
+    display: block;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+  }
+
+  .panelLinks a[aria-current="true"] {
+    color: var(--green);
+  }
+
+  .panelCta {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panelLinks li,
+  .burger::before,
+  .burger::after {
+    transition: none;
+  }
+}

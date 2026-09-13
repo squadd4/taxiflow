@@ -1,0 +1,113 @@
+/* Static layout: its own screen over the final frame. */
+.cta {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 90svh;
+  overflow: hidden;
+  background: var(--black);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 60%;
+}
+
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--black) 0%, rgb(0 0 0 / 0.7) 40%, rgb(0 0 0 / 0.25) 100%);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: min(640px, 100%);
+  margin-left: auto;
+  padding: 0 var(--gutter) clamp(64px, 12svh, 140px);
+}
+
+.eyebrow {
+  display: flex;
+  width: fit-content;
+  margin-bottom: 28px;
+  transform-origin: 50% 50%;
+}
+
+.title {
+  font-size: clamp(2.4rem, min(5vw, 9.5vh), 5rem);
+  font-weight: 500;
+  letter-spacing: -0.042em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 36ch;
+  margin-top: 22px;
+  font-size: clamp(1.0625rem, 1.35vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--gray);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+@media (max-width: 560px) {
+  .actions {
+    flex-direction: column;
+  }
+}
+
+/* Cinematic layout: resolves over the held final frame inside the stage. */
+:global(html[data-motion="on"]) .cta {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+}
+
+:global(html[data-motion="on"]) .cta[data-interactive="true"] {
+  pointer-events: auto;
+}
+
+:global(html[data-motion="on"]) .cta::after,
+:global(html[data-motion="on"]) .backdrop {
+  display: none;
+}
+
+:global(html[data-motion="on"]) .inner {
+  position: absolute;
+  right: var(--gutter);
+  bottom: max(96px, 15svh);
+  width: min(600px, 44vw);
+  margin: 0;
+  padding: 0;
+}
+
+:global(html[data-motion="on"]) .eyebrow,
+:global(html[data-motion="on"]) [data-hero="cta-item"] {
+  opacity: 0;
+}
+
+@media (max-aspect-ratio: 1 / 1) {
+  :global(html[data-motion="on"]) .inner {
+    left: var(--gutter);
+    width: auto;
+    bottom: calc(100lvh - 100svh + max(28px, 6svh));
+  }
+}

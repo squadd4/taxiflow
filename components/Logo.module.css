@@ -1,0 +1,30 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.875rem;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mark {
+  width: 1.45em;
+  height: 1.45em;
+  flex: none;
+}
+
+.word {
+  display: inline-flex;
+  gap: 0.55em;
+}
+
+.taxi {
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.flow {
+  font-weight: 300;
+  letter-spacing: 0.32em;
+}

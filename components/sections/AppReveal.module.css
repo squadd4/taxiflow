@@ -1,0 +1,146 @@
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(112px, 14vw, 200px) var(--gutter) 0;
+  scroll-margin-top: var(--nav-height);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 24px clamp(32px, 6vw, 96px);
+}
+
+.heading {
+  max-width: 14ch;
+  font-size: clamp(2.3rem, 5vw, 4.75rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 42ch;
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--gray);
+  text-wrap: pretty;
+}
+
+.wall {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: clamp(56px, 7vw, 104px);
+}
+
+/* Justified rows: widths follow each capture's ratio, so heights match without cropping. */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.screen {
+  flex: var(--ratio) 1 0%;
+  min-width: 0;
+  margin: 0;
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio);
+  border-radius: 6px;
+  background: var(--ink);
+}
+
+/* Hairline edge drawn inside, so it is clipped together with the screen. */
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgb(242 243 239 / 0.12);
+  pointer-events: none;
+}
+
+.shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  margin-top: 12px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--gray);
+}
+
+.captionTitle {
+  margin-right: 0.35em;
+  font-weight: 500;
+  color: var(--white);
+}
+
+/* Screens wait closed until the reveal script takes over (motion allowed only). */
+:global(html[data-motion="on"]) .media {
+  clip-path: inset(100% 0 0 0 round 6px);
+}
+
+:global(html[data-motion="on"]) .shot {
+  transform: scale(1.12);
+  will-change: transform;
+}
+
+:global(html[data-motion="on"]) .caption {
+  opacity: 0;
+}
+
+@media (max-width: 860px) {
+  .intro {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phones: one capture per row, the two light-mode captures side by side. */
+@media (max-width: 767px) {
+  .wall {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px 10px;
+  }
+
+  .row {
+    display: contents;
+  }
+
+  .screen {
+    flex: 1 1 100%;
+  }
+
+  .screen[data-screen="hoje"] {
+    order: 1;
+  }
+
+  .screen[data-screen="historico"] {
+    order: 2;
+  }
+
+  .screen[data-screen="mapa"] {
+    order: 3;
+  }
+
+  .screen[data-screen="estatisticas"],
+  .screen[data-screen="relatorios"] {
+    order: 4;
+    flex: var(--ratio) 1 0%;
+  }
+
+  .screen[data-screen="relatorios"] {
+    order: 5;
+  }
+}
