@@ -3,11 +3,11 @@ import styles from "./sections.module.css";
 const ADJUSTMENTS = [
   {
     title: "Registo de corridas",
-    text: "Só os campos que usas: valor, forma de pagamento, origem e destino, quilómetros.",
+    text: "Só os campos que usa: valor, forma de pagamento, origem e destino, quilómetros.",
   },
   {
     title: "Fecho de contas",
-    text: "A tua percentagem e a da empresa, o gasóleo e as despesas, com as regras de dias úteis, fins de semana e feriados.",
+    text: "A sua percentagem e a da empresa, o gasóleo e as despesas, com as regras de dias úteis, fins de semana e feriados.",
   },
   {
     title: "Turnos e folgas",
@@ -27,11 +27,11 @@ const ADJUSTMENTS = [
   },
   {
     title: "Mapa e praças",
-    text: "As zonas e as praças onde trabalhas, a partir das corridas que registas.",
+    text: "As zonas e as praças onde trabalha, a partir das corridas que regista.",
   },
   {
     title: "Aspeto",
-    text: "Modo claro ou escuro, com as cores e o logótipo da tua empresa.",
+    text: "Modo claro ou escuro, com as cores e o logótipo da sua empresa.",
   },
 ];
 
@@ -44,10 +44,10 @@ export default function Features() {
     >
       <div className={styles.split}>
         <h2 id="funcionalidades-title" className={styles.heading}>
-          O que ajustamos contigo
+          O que ajustamos para si
         </h2>
         <p className={styles.lead}>
-          Partimos do que a aplicação já faz e mudamos o que for preciso para encaixar no teu dia
+          Partimos do que a aplicação já faz e mudamos o que for preciso para encaixar no seu dia
           na praça.
         </p>
       </div>
