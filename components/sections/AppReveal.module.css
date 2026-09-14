@@ -6,7 +6,7 @@
   overflow: clip;
 }
 
-/* Outer track that provides scrollable length */
+/* Outer track providing the scrollable height */
 .scrollTrack {
   position: relative;
   width: 100%;
@@ -20,7 +20,7 @@
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: clamp(24px, 4vh, 48px) var(--gutter) clamp(16px, 3vh, 36px);
+  padding: clamp(24px, 4vh, 48px) var(--gutter) clamp(16px, 3vh, 32px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -28,26 +28,7 @@
   box-sizing: border-box;
 }
 
-/* Subtle atmospheric backdrop radial glow */
-.ambientGlow {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: clamp(500px, 70vw, 1000px);
-  height: clamp(300px, 45vh, 600px);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(61, 170, 110, 0.12) 0%,
-    rgba(29, 79, 55, 0.05) 45%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(40px);
-}
-
-/* Header section */
+/* Header section - clear hierarchy, no decorative clutter */
 .header {
   position: relative;
   z-index: 10;
@@ -58,81 +39,81 @@
 }
 
 .headerMain {
-  max-width: 680px;
+  max-width: 640px;
 }
 
 .tag {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--green);
   margin-bottom: 8px;
 }
 
 .heading {
-  font-size: clamp(1.85rem, 3.8vw, 3.25rem);
+  font-size: clamp(1.85rem, 3.6vw, 3.25rem);
   font-weight: 500;
   letter-spacing: -0.04em;
-  line-height: 1.08;
+  line-height: 1.06;
   color: var(--white);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   text-wrap: balance;
 }
 
 .lead {
-  font-size: clamp(0.9375rem, 1.15vw, 1.0625rem);
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
   line-height: 1.5;
   color: var(--gray);
-  max-width: 58ch;
+  max-width: 56ch;
   text-wrap: pretty;
 }
 
-/* Controls: Counter and Chevrons */
+/* Controls: Counter and Minimal Navigation */
 .controls {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   flex-shrink: 0;
 }
 
 .counter {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 3px;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
 }
 
 .counterCurrent {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--white);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 .counterSep {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--gray-dim);
 }
 
 .counterTotal {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--gray-dim);
 }
 
 .navButtons {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .navBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(242, 243, 239, 0.05);
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: transparent;
   border: 1px solid rgba(242, 243, 239, 0.12);
   color: var(--white);
   display: flex;
@@ -140,47 +121,44 @@
   justify-content: center;
   cursor: pointer;
   transition:
-    background 0.2s var(--ease-out),
     border-color 0.2s var(--ease-out),
     color 0.2s var(--ease-out),
-    transform 0.15s ease;
+    background 0.2s var(--ease-out);
 }
 
 .navBtn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .navBtn:hover:not(:disabled) {
-  background: rgba(61, 170, 110, 0.15);
-  border-color: rgba(61, 170, 110, 0.5);
+  border-color: var(--green);
   color: var(--green);
-  transform: scale(1.05);
+  background: rgba(61, 170, 110, 0.08);
 }
 
 .navBtn:disabled {
-  opacity: 0.3;
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
-/* Thin horizontal progress track */
+/* Thin horizontal progress track - 1.5px minimal line */
 .progressTrack {
   position: relative;
   z-index: 10;
   width: 100%;
-  height: 2px;
+  height: 1.5px;
   background: rgba(242, 243, 239, 0.08);
-  border-radius: 999px;
-  margin: 12px 0 6px;
+  border-radius: 2px;
+  margin: 10px 0 4px;
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  background: linear-gradient(90deg, var(--green), var(--green-hover));
-  border-radius: 999px;
-  box-shadow: 0 0 10px var(--green);
-  transition: width 0.15s ease-out;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 0.12s ease-out;
 }
 
 /* Carousel Viewport */
@@ -194,7 +172,6 @@
   align-items: center;
   justify-content: center;
   overflow: visible;
-  perspective: 1200px;
 }
 
 /* Sliding horizontal track */
@@ -215,34 +192,32 @@
   margin: 0 clamp(10px, 1.8vw, 24px);
   will-change: transform, opacity, filter;
   transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.3s ease,
-    filter 0.3s ease;
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.28s ease,
+    filter 0.28s ease;
   transform-origin: center center;
 }
 
-/* Card frame with rounded corners inspired by image_05c158.png */
+/* Card frame with clean, modern 16px rounded corners */
 .card {
   position: relative;
   width: 100%;
-  border-radius: 20px;
-  background: #0d0f0e;
+  border-radius: 16px;
+  background: #090a09;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid rgba(242, 243, 239, 0.1);
-  box-shadow:
-    0 24px 70px -15px rgba(0, 0, 0, 0.92),
-    0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.85);
   transition:
-    border-color 0.3s var(--ease-out),
-    box-shadow 0.3s var(--ease-out);
+    border-color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
 }
 
 .slide[data-active="true"] .card {
   border-color: rgba(61, 170, 110, 0.45);
   box-shadow:
-    0 32px 85px -20px rgba(0, 0, 0, 0.95),
-    0 0 50px -12px rgba(61, 170, 110, 0.35);
+    0 24px 55px -12px rgba(0, 0, 0, 0.95),
+    0 0 20px -5px rgba(61, 170, 110, 0.2);
   cursor: zoom-in;
 }
 
@@ -273,55 +248,51 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(242, 243, 239, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(242, 243, 239, 0.08);
   pointer-events: none;
   z-index: 2;
 }
 
-/* Bottom corner badge inspired by image_05c158.png */
+/* Minimalist corner badge */
 .badge {
   position: absolute;
-  right: 14px;
-  bottom: 14px;
+  right: 12px;
+  bottom: 12px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 14px 8px 10px;
-  font-size: 0.8125rem;
+  gap: 6px;
+  padding: 6px 11px 6px 8px;
+  font-size: 0.75rem;
   font-weight: 500;
   line-height: 1;
   color: var(--white);
-  background: rgba(10, 11, 10, 0.88);
-  border: 1px solid rgba(242, 243, 239, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 999px;
+  background: rgba(10, 11, 10, 0.85);
+  border: 1px solid rgba(242, 243, 239, 0.16);
+  border-radius: 6px;
   opacity: 0.9;
   transition:
     background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s ease;
 }
 
 .badgeIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 
 .badgeIcon svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
   fill: var(--green);
 }
 
 .card:hover .badge {
-  background: rgba(29, 79, 55, 0.85);
-  border-color: rgba(61, 170, 110, 0.6);
-  transform: scale(1.04);
+  background: rgba(20, 24, 21, 0.95);
+  border-color: var(--green);
 }
 
 /* Active Screen Info / Caption */
@@ -331,28 +302,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 16px 24px;
-  background: rgba(14, 16, 14, 0.7);
+  gap: 20px;
+  padding: 12px 18px;
+  background: rgba(12, 14, 12, 0.85);
   border: 1px solid rgba(242, 243, 239, 0.08);
-  border-radius: 14px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  margin-top: 8px;
+  border-radius: 10px;
+  margin-top: 6px;
 }
 
 .captionContent {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
-  animation: fadeIn 0.25s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
@@ -363,32 +332,31 @@
 .captionBadge {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .captionIndex {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--green);
-  background: rgba(61, 170, 110, 0.12);
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(61, 170, 110, 0.25);
+  border: 1px solid rgba(61, 170, 110, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
   font-variant-numeric: tabular-nums;
 }
 
 .captionTitle {
-  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
   font-weight: 500;
   color: var(--white);
   letter-spacing: -0.02em;
 }
 
 .captionText {
-  font-size: clamp(0.875rem, 1.05vw, 0.9375rem);
+  font-size: clamp(0.8125rem, 0.95vw, 0.875rem);
   color: var(--gray);
-  line-height: 1.45;
+  line-height: 1.4;
   max-width: 60ch;
   white-space: normal;
   overflow: hidden;
@@ -398,31 +366,29 @@
 .zoomAction {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
-  font-size: 0.8125rem;
+  gap: 6px;
+  padding: 7px 13px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--white);
-  background: rgba(242, 243, 239, 0.06);
+  background: transparent;
   border: 1px solid rgba(242, 243, 239, 0.14);
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
   flex-shrink: 0;
   transition:
-    background 0.2s var(--ease-out),
     border-color 0.2s var(--ease-out),
     color 0.2s var(--ease-out);
 }
 
 .zoomAction svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   fill: currentColor;
 }
 
 .zoomAction:hover {
-  background: rgba(61, 170, 110, 0.16);
-  border-color: rgba(61, 170, 110, 0.5);
+  border-color: var(--green);
   color: var(--green);
 }
 
@@ -433,19 +399,19 @@
   }
 
   .captionContainer {
-    padding: 14px 18px;
+    padding: 12px 16px;
   }
 }
 
 @media (max-width: 768px) {
   .stickyStage {
-    padding: 20px 16px 16px;
+    padding: 18px 14px 14px;
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 12px;
   }
 
   .controls {
@@ -460,8 +426,8 @@
   .captionContainer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 12px 16px;
+    gap: 8px;
+    padding: 10px 14px;
   }
 
   .zoomAction {

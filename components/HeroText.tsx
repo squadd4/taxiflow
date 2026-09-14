@@ -1,7 +1,7 @@
 import styles from "./HeroText.module.css";
 
 const TITLE = ["Feito para a estrada.", "E para quem a conhece."];
-const SUBTITLE = ["Corridas, turnos e contas", "numa aplicação à tua medida."];
+const SUBTITLE = ["Corridas, turnos e contas", "numa aplicação à sua medida."];
 
 export default function HeroText() {
   return (

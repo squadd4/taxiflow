@@ -159,9 +159,6 @@ export default function AppReveal() {
       >
         {/* Sticky stage staying locked to viewport while user scrolls through */}
         <div className={styles.stickyStage}>
-          {/* Subtle atmospheric ambient glow */}
-          <div className={styles.ambientGlow} aria-hidden="true" />
-
           {/* Section Header */}
           <div className={styles.header}>
             <div className={styles.headerMain}>

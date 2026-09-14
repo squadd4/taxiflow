@@ -2,16 +2,16 @@ import styles from "./sections.module.css";
 
 const STEPS = [
   {
-    title: "Falamos contigo",
-    text: "Contas-nos como são os teus turnos, como recebes e que contas tens de entregar à empresa.",
+    title: "Falamos consigo",
+    text: "Explica-nos como são os seus turnos, como recebe e que contas tem de entregar à empresa.",
   },
   {
     title: "Montamos a primeira versão",
-    text: "Com as tuas regras de comissões e despesas. Revemos tudo contigo antes de a pores a trabalhar.",
+    text: "Com as suas regras de comissões e despesas. Revemos tudo consigo antes de a colocar a trabalhar.",
   },
   {
-    title: "Começas a usar",
-    text: "No telemóvel ou no computador. Continua a funcionar sem rede e acerta tudo quando a ligação volta.",
+    title: "Começa a usar",
+    text: "No telemóvel ou no computador. Continua a funcionar sem rede e sincroniza quando a ligação volta.",
   },
   {
     title: "Ajustamos pelo caminho",

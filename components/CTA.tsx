@@ -23,7 +23,7 @@ export default function CTA() {
           <Logo />
         </p>
         <h2 id="cta-title" className={styles.title} data-hero="cta-item">
-          Diz-nos como trabalhas. Nós fazemos a aplicação.
+          Diga-nos como trabalha. Nós fazemos a aplicação.
         </h2>
         <p className={styles.lead} data-hero="cta-item">
           Registo de corridas, fecho de contas e relatórios para a contabilidade, feitos à

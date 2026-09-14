@@ -72,10 +72,10 @@ export default function Contact() {
       <div className={styles.layout}>
         <div className={styles.intro}>
           <h2 id="contacto-title" className={styles.heading}>
-            Pede um orçamento
+            Peça um orçamento
           </h2>
           <p className={styles.lead}>
-            Conta-nos como trabalhas, sozinho ou com frota, e o que precisas que a aplicação
+            Conte-nos como trabalha, sozinho ou com frota, e o que precisa que a aplicação
             faça. Respondemos por email com uma proposta.
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function Contact() {
           <div ref={noticeRef} className={styles.done} role="status" tabIndex={-1}>
             <p className={styles.doneTitle}>Pedido enviado</p>
             <p className={styles.doneText}>
-              Obrigado. Vamos ler o que escreveste e responder para o email que indicaste.
+              Agradecemos o seu contacto. Vamos analisar o seu pedido e responder para o email indicado.
             </p>
           </div>
         ) : (
@@ -171,7 +171,7 @@ export default function Contact() {
 
             <Field
               field="message"
-              label="O que precisas que a aplicação faça"
+              label="O que precisa que a aplicação faça"
               hint="Por exemplo: comissões da empresa, várias viaturas, turnos e folgas, relatórios para a contabilidade."
               error={errors.message}
             >
@@ -202,7 +202,7 @@ export default function Contact() {
                 {state.contactEmail && (
                   <>
                     {" "}
-                    Se preferires, escreve-nos para{" "}
+                    Se preferir, escreva-nos para{" "}
                     <a className={styles.failedLink} href={`mailto:${state.contactEmail}`}>
                       {state.contactEmail}
                     </a>
@@ -220,7 +220,7 @@ export default function Contact() {
               >
                 {pending ? "A enviar…" : "Pedir orçamento"}
               </button>
-              <p className={styles.note}>Usamos estes dados apenas para responder ao teu pedido.</p>
+              <p className={styles.note}>Usamos estes dados apenas para responder ao seu pedido.</p>
             </div>
           </form>
         )}
